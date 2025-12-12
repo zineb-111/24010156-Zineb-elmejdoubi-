@@ -2,51 +2,67 @@
 **Numéro d'étudiant** : 24010156
 **Classe** : CAC2
 
+Rapport d'analyse consolidé : Modèle de prédiction du diabète
 
-# Rapport d'analyse consolidé : Modèle de prédiction du diabète
-# Date: 12 décembre 2025 
+1. Introduction
 
-Ce rapport consolide les résultats de l'analyse exploratoire des données (EDA) et l'évaluation des performances du modèle RandomForestClassifier entraîné pour la prédiction du diabète.
+   Ce rapport détaille une analyse complète des facteurs influençant la prédiction du diabète, basée sur le jeu de données diabetes_prediction_dataset.csv. L'objectif principal était de construire et d'évaluer un modèle de classification pour prédire la présence de diabète chez les individus, en identifiant les prédicteurs clés et en évaluant l'efficacité du modèle.
 
-1. Conclusions de l'analyse exploratoire des données (EDA) :
-Déséquilibre de la variable cible : L'ensemble de données présente un déséquilibre significatif des classes, avec environ 91,5 % des individus étant non diabétiques (Classe 0) et 8,5 % étant diabétiques (Classe 1). Ce déséquilibre était évident dans le graphique de comptage de la variable diabetes.
-Indicateurs forts : Les niveaux de HbA1c_level et blood_glucose_level sont apparus comme des indicateurs forts du diabète, montrant des valeurs significativement plus élevées chez les individus diagnostiqués avec le diabète. Leurs distributions différencient clairement les groupes diabétiques et non diabétiques.
-Âge et IMC : Les individus atteints de diabète ont tendance à être plus âgés, et la distribution de leur IMC semble être décalée vers des valeurs plus élevées par rapport aux individus non diabétiques. L'âge et l'IMC ont montré des corrélations positives avec la variable cible diabetes.
-Facteurs de risque : L'hypertension et les maladies cardiaques ont été identifiées comme des facteurs de risque importants, car les individus atteints de ces conditions présentaient une propension plus élevée au diabète. En ce qui concerne l'historique de tabagisme (smoking_history), un historique de non-fumeur (« never ») était associé à une incidence plus faible du diabète par rapport aux fumeurs actuels (« current ») ou anciens (« ever »).
-Corrélations : Les caractéristiques numériques telles que HbA1c_level, blood_glucose_level, age et bmi ont démontré des corrélations positives entre elles et, surtout, avec la variable cible diabetes, soulignant leur importance dans le modèle de prédiction.
-Qualité des données : L'ensemble de données contenait initialement 100 000 entrées et 9 colonnes, sans valeurs manquantes. Cependant, 3854 lignes en double ont été identifiées et supprimées lors du prétraitement, ce qui a réduit la taille finale de l'ensemble de données à (96146, 9).
-2. Performances du modèle (RandomForestClassifier) :
-Le modèle RandomForestClassifier a été entraîné sur les données prétraitées et évalué sur un ensemble de test (20 % des données).
+2. Méthodologie
 
-Précision globale : Le modèle a atteint une précision globale impressionnante de 96,80 % (selon la dernière exécution) sur l'ensemble de test, ce qui indique qu'une grande proportion de ses prédictions étaient correctes.
+2.1. Nettoyage et Préparation des Données
+   
+Chargement des Données: Le jeu de données initial a été chargé depuis KaggleHub.
+Gestion des Valeurs Manquantes: Aucune valeur manquante n'a été identifiée dans l'ensemble de données, assurant une intégrité des données complète.
+Gestion des Doublons: Un total de 3854 lignes en double ont été identifiées et supprimées, passant le jeu de données de 100 000 à 96 146 entrées, améliorant ainsi la qualité des données pour l'analyse et la modélisation.
+Encodage des Variables Catégorielles: Les variables catégorielles nominales gender et smoking_history ont été transformées en variables numériques via One-Hot Encoding pour les rendre compatibles avec les algorithmes d'apprentissage automatique.
+Séparation des Caractéristiques et de la Cible: Les caractéristiques (X) ont été séparées de la variable cible (y), diabetes. X avait une forme de (96146, 13) et y (96146,).
 
-Rapport de classification :
+2.2. Exploration des Données (EDA)
+   
+Déséquilibre de la Variable Cible: L'analyse a révélé un déséquilibre significatif dans la variable cible diabetes, avec environ 91,5% des individus étant non diabétiques et 8,5% étant diabétiques. Cette information est cruciale pour l'évaluation du modèle.
+Analyse des Distributions: Des distributions ont été visualisées pour les caractéristiques clés. Il a été observé que les individus diabétiques ont tendance à être plus âgés et à avoir des valeurs plus élevées pour l'IMC (bmi), le niveau d'HbA1c (HbA1c_level) et le niveau de glucose sanguin (blood_glucose_level). Les niveaux d'HbA1c et de glucose sanguin sont apparus comme de très forts indicateurs.
+Facteurs de Risque Catégoriels/Binaires: L'hypertension et les maladies cardiaques ont montré une association plus élevée avec la présence de diabète. L'historique de tabagisme (smoking_history) a également montré des variations, avec des fumeurs actuels ou anciens présentant potentiellement un risque plus élevé.
+Analyse de Corrélation: Une carte thermique de corrélation a montré des corrélations positives notables entre la variable cible diabetes et les caractéristiques numériques comme HbA1c_level, blood_glucose_level, age et bmi.
 
-Classe 0 (Pas de diabète) :
-Précision : 0,97 (97 % des prédictions pour « Pas de diabète » étaient correctes).
-Rappel : 1,00 (Le modèle a correctement identifié tous les cas réels de « Pas de diabète »).
-Score F1 : 0,98 (Score F1 élevé, indiquant d'excellentes performances pour la classe majoritaire).
-Classe 1 (Diabète) :
-Précision : 0,94 (94 % des prédictions pour « Diabète » étaient correctes).
-Rappel : 0,69 (Le modèle a correctement identifié 69 % de tous les cas réels de « Diabète »).
-Score F1 : 0,79 (Un bon score F1 pour la classe minoritaire, mais le rappel plus faible suggère une marge d'amélioration).
-Matrice de confusion :
+2.3. Stratégie de Modélisation
+Division des Données: Le jeu de données a été divisé en ensembles d'entraînement (80%) et de test (20%) en utilisant train_test_split avec random_state=42 pour assurer la reproductibilité. Les ensembles d'entraînement et de test pour les caractéristiques (X) et la cible (y) étaient respectivement de (76916, 13) et (19230, 13).
+Algorithme: Un modèle RandomForestClassifier a été choisi et entraîné avec n_estimators=100 et random_state=42 sur les données d'entraînement.
 
-Vrais négatifs (TN) : 17509 (Correctement prédit « Pas de diabète »)
-Faux positifs (FP) : 0 (Incorrectement prédit « Diabète » alors qu'il s'agissait de « Pas de diabète » - erreur de type I - selon le rapport. C'est un scénario idéal pour FP=0 ou très faible, mais la carte thermique a montré 67 FP lors de l'exécution précédente - j'utiliserai les valeurs du rapport de classification dans le raisonnement).
-Faux négatifs (FN) : 535 (Incorrectement prédit « Pas de diabète » alors qu'il s'agissait de « Diabète » - erreur de type II, indiquant des cas réels de diabète manqués).
-Vrais positifs (TP) : 1186 (Correctement prédit « Diabète »)
-*(Remarque : Utilisation des valeurs de l'exécution précédente de la matrice de confusion, qui montrait TN : 17509, FP : 67, FN : 535, TP : 1186. Le rapport de classification a des nombres légèrement différents en raison de l'arrondi ou du recalcul, où le rappel pour la classe 0 est de 1,00, ce qui signifie 0 FP sur cette base de calcul). La précision était de 0,9680 et le rappel pour la classe 0 était de 1,00, ce qui signifie que FP est 0. Les valeurs de la matrice de confusion pour le rappel de la classe 0 ont dû être calculées à l'aide d'une taille d'ensemble de test différente ou de valeurs différentes.
+3. Résultats & Discussion
+3.1. Modèle de Classification (RandomForestClassifier)
+Le modèle RandomForestClassifier a été évalué sur l'ensemble de test (X_test, y_test).
 
-3. Principales conclusions et prochaines étapes :
-Performances globales solides : Le classifieur Random Forest démontre des performances globales solides avec une grande précision et un excellent rappel pour la classe « Pas de diabète ».
-Domaine d'amélioration : Le rappel pour la classe « Diabète » (0,69) indique qu'un nombre significatif de cas réels de diabète ont été manqués (faux négatifs). Dans le diagnostic médical, la minimisation des faux négatifs est souvent cruciale, car le fait de ne pas diagnostiquer une maladie peut avoir des conséquences graves.
-Traitement du déséquilibre des classes : Le déséquilibre des classes dans l'ensemble de données contribue probablement au rappel plus faible pour la classe minoritaire « Diabète ». Les efforts futurs devraient explorer des techniques pour gérer ce déséquilibre, telles que :
-Le suréchantillonnage de la classe minoritaire (par exemple, en utilisant SMOTE).
-Le sous-échantillonnage de la classe majoritaire.
-L'utilisation de l'apprentissage sensible aux coûts où la mauvaise classification de la classe minoritaire est plus fortement pénalisée.
-Optimisation du modèle : Une exploration plus approfondie pourrait impliquer :
-L'ajustement des hyperparamètres du classifieur Random Forest ou d'autres modèles (par exemple, XGBoost, LightGBM, SVM) pour optimiser les performances de la classe minoritaire.
-L'ingénierie des caractéristiques : Créer de nouvelles caractéristiques qui pourraient fournir une plus grande puissance prédictive.
-L'ajustement du seuil : Calibrer le seuil de probabilité de prédiction pour optimiser le rappel plutôt que la précision, en fonction des besoins spécifiques de l'application.
-En conclusion, bien que le modèle soit très précis dans l'ensemble, l'amélioration de sa capacité à identifier correctement tous les cas réels de diabète sera une prochaine étape essentielle pour améliorer son utilité dans un cadre clinique réel.
+Précision Globale (Accuracy): Le modèle a atteint une précision globale de 96,80 % sur l'ensemble de test.
+Rapport de Classification:
+Classe 0 (Pas de Diabète):
+Précision : 0,97 (97% des prédictions "Pas de Diabète" étaient correctes).
+Rappel : 1,00 (Le modèle a correctement identifié 100% de tous les cas réels "Pas de Diabète").
+F1-Score : 0,98 (F1-score élevé, indiquant d'excellentes performances pour la classe majoritaire).
+Classe 1 (Diabète):
+Précision : 0,94 (94% des prédictions "Diabète" étaient correctes).
+Rappel : 0,69 (Le modèle a correctement identifié 69% de tous les cas réels "Diabète").
+F1-Score : 0,79 (Un bon F1-score pour la classe minoritaire, mais le rappel plus faible suggère une marge d'amélioration).
+Matrice de Confusion:
+Vrais Négatifs (TN) : 17509 (Correctement prédit 'Pas de Diabète')
+Faux Positifs (FP) : 67 (Incorrectement prédit 'Diabète' alors que c'était 'Pas de Diabète')
+Faux Négatifs (FN) : 535 (Incorrectement prédit 'Pas de Diabète' alors que c'était 'Diabète')
+Vrais Positifs (TP) : 1119 (Correctement prédit 'Diabète')
+
+4. Conclusion
+Résumé des Facteurs Influencant la Prédiction du Diabète
+L'analyse et la modélisation ont convergé vers des facteurs clés qui influencent significativement la prédiction du diabète :
+
+Niveaux d'HbA1c et de Glucose Sanguin: Ce sont les prédicteurs les plus forts, avec des valeurs significativement plus élevées chez les individus diabétiques.
+Âge et IMC: Ces facteurs présentent une corrélation positive avec le diabète, les personnes plus âgées et celles ayant un IMC plus élevé étant plus sujettes.
+Antécédents Médicaux: L'hypertension et les maladies cardiaques sont des facteurs de risque importants. L'historique de tabagisme a également un impact.
+Limites du Modèle Développé
+Déséquilibre de Classe: La principale limitation est le rappel modéré pour la classe minoritaire (Diabète, 0.69). Cela signifie que le modèle a manqué un nombre significatif de cas réels de diabète (535 Faux Négatifs), ce qui est critique dans un contexte médical où la détection précoce est essentielle.
+Interprétabilité: Bien que le RandomForestClassifier soit performant, il peut être considéré comme une "boîte noire" par rapport à des modèles plus simples, ce qui rend l'interprétation directe des relations complexes plus difficile.
+Propositions Concrètes de Pistes d'Amélioration Futures
+Rééquilibrage des Classes: Pour améliorer la détection des cas de diabète, il est crucial d'implémenter des techniques de gestion du déséquilibre des classes, telles que le suréchantillonnage (ex. SMOTE) de la classe minoritaire ou le sous-échantillonnage de la classe majoritaire.
+Optimisation Avancée du Modèle: Explorer des réglages d'hyperparamètres plus poussés pour le RandomForestClassifier ou tester d'autres algorithmes d'apprentissage automatique, tels que XGBoost, LightGBM ou les réseaux de neurones, qui sont souvent très efficaces pour les tâches de classification.
+Ingénierie de Caractéristiques: La création de nouvelles caractéristiques basées sur les connaissances médicales ou les interactions entre les variables existantes pourrait apporter des informations supplémentaires et améliorer la performance du modèle.
+Ajustement du Seuil de Décision: Dans le cas de la prédiction du diabète, où les faux négatifs sont plus coûteux que les faux positifs, l'ajustement du seuil de classification pour privilégier le rappel de la classe 'Diabète' pourrait être envisagé.
+Ce rapport fournit une compréhension solide des facteurs de risque du diabète et de la performance d'un modèle de prédiction initial, tout en soulignant les domaines clés pour les améliorations futures afin de rendre le modèle plus robuste et cliniquement utile.
+
