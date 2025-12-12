@@ -30,6 +30,7 @@ Division des Données: Le jeu de données a été divisé en ensembles d'entraî
 Algorithme: Un modèle RandomForestClassifier a été choisi et entraîné avec n_estimators=100 et random_state=42 sur les données d'entraînement.
 
 3. Résultats & Discussion
+   
 3.1. Modèle de Classification (RandomForestClassifier)
 Le modèle RandomForestClassifier a été évalué sur l'ensemble de test (X_test, y_test).
 
@@ -50,6 +51,7 @@ Faux Négatifs (FN) : 535 (Incorrectement prédit 'Pas de Diabète' alors que c'
 Vrais Positifs (TP) : 1119 (Correctement prédit 'Diabète')
 
 4. Conclusion
+   
 Résumé des Facteurs Influencant la Prédiction du Diabète
 L'analyse et la modélisation ont convergé vers des facteurs clés qui influencent significativement la prédiction du diabète :
 
